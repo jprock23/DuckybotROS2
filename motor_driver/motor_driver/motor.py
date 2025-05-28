@@ -50,9 +50,9 @@ class Motor:
         else:
             self.direction = MotorDirection.STOPPED 
         
-        #self._controller.set(self.direction)       
-        #speed = self.normalizeSpeed(speed)
-        #self._pwm.setPWM(self._pwm_pin, 0, speed * self._K)
+        self._controller.set(self.direction)       
+        speed = self.normalizeSpeed(speed)
+        self._pwm.setPWM(self._pwm_pin, 0, speed * self._K)
         
     def get_direction(self):
         return self.direction
