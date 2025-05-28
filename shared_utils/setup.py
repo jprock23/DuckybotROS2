@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'encoder_driver'
+package_name = 'shared_utils'
 
 setup(
     name=package_name,
@@ -15,12 +15,11 @@ setup(
     zip_safe=True,
     maintainer='jproque',
     maintainer_email='juanproque@outlook.com',
-    description='Package for interfacing with the a motor encoder on the duckiebot DB-19.',
+    description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'encoder=encoder_driver.encoder_node:main'
         ],
     },
 )

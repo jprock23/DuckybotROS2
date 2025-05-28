@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO # type: ignore
-from include.Adafruit_PWM_Servo_Driver import PWM
-from include.constants import MotorDirection, _DIRECTION_TO_SIGNALS, _PWM_VALUES
+from shared_utils.Adafruit_PWM_Servo_Driver import PWM
+from shared_utils.constants import MotorDirection, _DIRECTION_TO_SIGNALS, _PWM_VALUES
 from math import floor
 
 class PWMMotorDirectionController():
@@ -50,9 +50,9 @@ class Motor:
         else:
             self.direction = MotorDirection.STOPPED 
         
-        self._controller.set(self.direction)       
-        speed = self.normalizeSpeed(speed)
-        self._pwm.setPWM(self._pwm_pin, 0, speed * self._K)
+        #self._controller.set(self.direction)       
+        #speed = self.normalizeSpeed(speed)
+        #self._pwm.setPWM(self._pwm_pin, 0, speed * self._K)
         
     def get_direction(self):
         return self.direction

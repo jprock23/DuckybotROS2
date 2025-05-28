@@ -15,11 +15,12 @@ setup(
     zip_safe=True,
     maintainer='jproque',
     maintainer_email='juanproque@outlook.com',
-    description='TODO: Package for interfacing with the Duckiehat on the duckiebot DB-19.',
+    description='Package for interfacing with the Duckiehat on the duckiebot DB-19.',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'hat=hat_driver.hat_node:main',
         ],
     },
 )

@@ -1,24 +1,32 @@
-import RPi.GPIO as GPIO # type: ignore
+#import RPi.GPIO as GPIO # type: ignore
 from math import pi
-from include.constants import MotorDirection
+from shared_utils.constants import MotorDirection
 
-class encoder:
-    def __init__(self, pin, name, motor):
+class Encoder:
+    def __init__(self, pin, name):
         self.pin = pin
         self.name = name
         self.ticks = 0
-        self.motor = motor
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(pin, GPIO.IN)
-        GPIO.add_event_detect(pin, GPIO.RISING, self.callback)
+        self.direction = MotorDirection.STOPPED
+        #GPIO.setmode(GPIO.BCM)
+        #GPIO.setup(pin, GPIO.IN)
+        #GPIO.add_event_detect(pin, GPIO.RISING, self.callback)
         
     def callback(self, _):
-        #resolution: 147
-        if self.motor.get_direction() == MotorDirection.FORWARD:
+        if self.direction == MotorDirection.FORWARD:
             self.ticks += 1
-        elif self.motor.get_direction() == MotorDirection.BACKWARD:
-            self.ticks -=1
-        print(self.name + ":: ", self.ticks * (pi * 6.6)/147)
+        elif self.direction == MotorDirection.BACKWARD:
+            self.ticks -= 1
+        
+    def setDirection(self, dir):
+        self.direction = dir
+        
+    def getDirection(self):
+        return self.direction
+    
+    def getTicks(self):
+        return self.ticks
     
     def shutdown(self):
-        GPIO.remove_event_detect(self.pin)
+        pass
+        #GPIO.remove_event_detect(self.pin)

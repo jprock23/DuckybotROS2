@@ -15,11 +15,12 @@ setup(
     zip_safe=True,
     maintainer='jproque',
     maintainer_email='juanproque@outlook.com',
-    description='TODO: Package for interfacing with the Pi camera on the duckiebot DB-19.',
+    description='Package for interfacing with the Pi camera on the duckiebot DB-19.',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'camera=camera_driver.camera_node:main',
         ],
     },
 )

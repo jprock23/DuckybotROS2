@@ -15,7 +15,7 @@ setup(
     zip_safe=True,
     maintainer='jproque',
     maintainer_email='juanproque@outlook.com',
-    description='TODO: Package for a motor driver that controls a motor on the duckiebot DB-19.',
+    description='Package for a motor driver that controls a motor on the duckiebot DB-19.',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={

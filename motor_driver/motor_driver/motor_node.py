@@ -2,13 +2,14 @@ import rclpy
 from rclpy.node import Node
 from hat_driver.hat import Hat
 
+from std_msgs.msg import Header
 from interfaces.msg import Throttle
 
 class Motor_Node(Node):
     def __init__(self):
         super().__init__('motor_node')
-        self.subscription = self.create_subscription(Throttle, 'throttleCmd', self.listener_cb, 10)
-        self.subscription
+        
+        self.subscription = self.create_subscription(Throttle, '/throttleCmd', self.listener_cb, 10)
         
         self.hat = Hat()
         self.leftMotor = self.hat.get_motor(1, "left")
