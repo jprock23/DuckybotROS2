@@ -16,8 +16,8 @@ class Motor_Test_Node(Node):
         msg.header = Header()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = 'base_link'
-        msg.vl = 0.25
-        msg.vr = 0.25
+        msg.vl = 0.0
+        msg.vr = 0.0
         self.publisher.publish(msg)
         
         self.get_logger().info('Publishing: Time stamp: "%s", Frame_id: "%s", vl::"%s", vr:: "%s"' % (msg.header.stamp.sec, msg.header.frame_id, msg.vl, msg.vr))
