@@ -8,7 +8,7 @@ class Motor_Test_Node(Node):
     def __init__(self):
         super().__init__('motor_test_node')
         
-        self.publsiher = self.create_publisher(Throttle, '/throttleCmd', 10)
+        self.publisher = self.create_publisher(Throttle, '/throttleCmd', 10)
         self.Timer = self.create_timer(0.5, self.pub_cb)
         
     def pub_cb(self):
@@ -18,7 +18,7 @@ class Motor_Test_Node(Node):
         msg.header.frame_id = 'base_link'
         msg.vl = 0.25
         msg.vr = 0.25
-        self.publsiher.publish(msg)
+        self.publisher.publish(msg)
         
         self.get_logger().info('Publishing: Time stamp: "%s", Frame_id: "%s", vl::"%s", vr:: "%s"' % (msg.header.stamp.sec, msg.header.frame_id, msg.vl, msg.vr))
 
