@@ -1,3 +1,3 @@
 std_msgs/Header header
-float64 v1
-float64 v2
+float64 vl
+float64 vr

@@ -1,6 +1,6 @@
 from motor_driver.motor import Motor
-from shared_utils.shared_utils.Adafruit_PWM_Servo_Driver import PWM
-from shared_utils.shared_utils.constants import _MOTOR_NUM_TO_PINS
+from shared_utils.Adafruit_PWM_Servo_Driver import PWM
+from shared_utils.constants import _MOTOR_NUM_TO_PINS
 
 class Hat():
     def __init__(self, address=0x60, frequency=1600):

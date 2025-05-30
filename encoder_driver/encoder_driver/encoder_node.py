@@ -16,7 +16,7 @@ class Encoder_Node(Node):
         self.publisher = self.create_publisher(Encoder_msg, '/encoder_msg', 10)
         self.timer = self.create_timer(0.5, self.pub_cb)
         
-        #Subscriber
+        #Subscribers
         self.subscriber = self.create_subscription(Directions, '/motor_dirc', self.sub_cb, 10)
         
         self.lEncoder = Encoder(18, 'left')
