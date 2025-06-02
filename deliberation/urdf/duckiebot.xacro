@@ -26,7 +26,7 @@
   <xacro:property name="wheelMass" value="0.05"/>
   <xacro:property name="wheelOffsetY" value="0.037"/>
 
-  <xacro:include filename="deliberation/urdf/duckiebot.gazebo" />
+  <xarco:include filename="deliberation/urdf/duckiebot.gazebo" />
   <xacro:include filename="deliberation/urdf/materials.xacro" />
   <xacro:include filename="deliberation/urdf/macros.xacro" />
 
