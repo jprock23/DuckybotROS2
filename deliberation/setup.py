@@ -16,6 +16,8 @@ setup(
         (os.path.join('share', package_name, 'urdf'), glob('urdf/*.urdf')),
         (os.path.join('share', package_name, 'launch'), glob('launch/*')),
         (os.path.join('share', package_name), glob('urdf/*')),
+        (os.path.join('share', package_name, 'config/calibration'), glob('config/calibration/*.yaml')),
+
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -32,3 +34,4 @@ setup(
         ],
     },
 )
+
