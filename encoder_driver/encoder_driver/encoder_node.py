@@ -4,40 +4,61 @@ from .encoder import Encoder
 
 from std_msgs.msg import Header
 from shared_utils.constants import MotorDirection
-from interfaces.msg import Directions, Encoder as Encoder_msg
+from interfaces.msg import WheelEncoderStamped, WheelsCmdStamped
 
 class Encoder_Node(Node):
     def __init__(self):
         super().__init__('encoder_node')
         
-        self.declare_parameter('enc_name', 'left')
+        #Parameters
+        self.declare_parameter('configuration', 'left')
+        self.declare_parameter('gpio', 18)
+        self.declare_parameter('resolution', 135)
+        self.declare_parameter('type', 1)
+        
+        self.configuration = self.get_parameter('configuration').get_parameter_value().string_value
+        self.gpio = self.get_parameter('gpio').get_parameter_value().integer_value
+        self.resolution = self.get_parameter('resolution').get_parameter_value().integer_value
+        self.type = self.get_parameter('type').get_parameter_value().integer_value
         
         #Publishers
-        self.publisher = self.create_publisher(Encoder_msg, '/encoder_msg', 10)
-        self.timer = self.create_timer(0.5, self.pub_cb)
+        self.publisher = self.create_publisher(WheelEncoderStamped, "~/{configuration}/tick".format(configuration=self.configuration), 10)
+        self.timer = self.create_timer(0.5, self.tick_pub)
         
         #Subscribers
-        self.subscriber = self.create_subscription(Directions, '/motor_dirc', self.sub_cb, 10)
+        self.subscriber = self.create_subscription(WheelsCmdStamped, '/wheels_cmd', self.directiob_sub, 10)
         
-        self.lEncoder = Encoder(18, 'left')
-        self.rEncoder = Encoder(19, "right")
+        self.encoder = Encoder(self.gpio)
 
-    def pub_cb(self):
-        msg = Encoder_msg()
-        msg.lticks = self.lEncoder.getTicks()
-        msg.rticks = self.rEncoder.getTicks()
-        
+    def tick_pub(self):
+        msg = WheelEncoderStamped()
+        msg.data = self.encoder.getTicks()
+        msg.resolution = self.resolution
+        msg.type = self.type
+
         msg.header = Header()
         msg.header.stamp = self.get_clock().now().to_msg()
-        msg.header.frame_id = 'base_link'
+        msg.header.frame_id = f'duckiebot/{self.configuration}_wheel_axis'
         self.publisher.publish(msg)
         
-        self.get_logger().info('Publishing: Time stamp: "%s", Frame_id: "%s", lticks::"%s", rticks:: "%s"' % (msg.header.stamp.sec, msg.header.frame_id, msg.lticks, msg.rticks))
+        self.get_logger().info('Publishing: Time stamp: "%f", Frame_id: "%s", data::"%d", resolution:: "%d", type:: "%d"' % (msg.header.stamp.sec, msg.header.frame_id, msg.data,msg.resolution, msg.type))
     
-    def sub_cb(self, msg):
-        self.get_logger().info('Heard: left:: "%s", right:: "%s"' % (msg.ldirection, msg.rdirection))
-        self.lEncoder.setDirection(MotorDirection(msg.ldirection))
-        self.rEncoder.setDirection(MotorDirection(msg.rdirection))
+    def directiob_sub(self, msg):
+        self.get_logger().info('Heard: left:: "%s", right:: "%s"' % (msg.vel_left, msg.vel_right))
+        if self.configuration == 'left':
+            if msg.vel_left > 0:
+                self.encoder.setDirection(MotorDirection.FORWARD)
+            elif msg.vel_left < 0:
+                self.encoder.setDirection(MotorDirection.BACKWARD)
+            else:
+                self.encoder.setDirection(MotorDirection.STOPPED)
+        if self.configuration == 'right':
+            if msg.vel_right > 0:
+                self.encoder.setDirection(MotorDirection.FORWARD)
+            elif msg.vel_right < 0:
+                self.encoder.setDirection(MotorDirection.BACKWARD)
+            else:
+                self.encoder.setDirection(MotorDirection.STOPPED)
     
 def main(args=None):
     rclpy.init(args=args)

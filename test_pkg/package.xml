@@ -5,7 +5,7 @@
   <version>0.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="juanproque@outlook.com">jproque</maintainer>
-  <license>TODO: License declaration</license>
+  <license>TODO: GPLv3 </license>
 
   <depend>rclpy</depend>
 

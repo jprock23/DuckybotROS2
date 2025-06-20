@@ -3,9 +3,8 @@ from math import pi
 from shared_utils.constants import MotorDirection
 
 class Encoder:
-    def __init__(self, pin, name):
+    def __init__(self, pin):
         self.pin = pin
-        self.name = name
         self.ticks = 0
         self.direction = MotorDirection.STOPPED
         #GPIO.setmode(GPIO.BCM)
@@ -13,6 +12,7 @@ class Encoder:
         #GPIO.add_event_detect(pin, GPIO.RISING, self.callback)
         
     def callback(self, _):
+
         if self.direction == MotorDirection.FORWARD:
             self.ticks += 1
         elif self.direction == MotorDirection.BACKWARD:

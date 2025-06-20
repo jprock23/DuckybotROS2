@@ -5,9 +5,10 @@
   <version>0.0.0</version>
   <description>TODO: Package for interfacing with the a motor encoder on the duckiebot DB-19.</description>
   <maintainer email="juanproque@outlook.com">jproque</maintainer>
-  <license>TODO: License declaration</license>
+  <license>TODO: GPLv3 </license>
 
   <depend>rclpy</depend>
+  <exec_depend>ros2launch</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

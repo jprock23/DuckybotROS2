@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'motor_test=test_pkg.motor_test_node:main'
+            'motor_test=test_pkg.motor_test_node:main',
+            'encoder_test=test_pkg.encoder_test_node:main'
         ],
     },
 )
