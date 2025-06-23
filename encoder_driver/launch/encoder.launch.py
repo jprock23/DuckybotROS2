@@ -8,6 +8,7 @@ def generate_launch_description()->LaunchDescription:
     left_encoder  = Node(
             package=package_name,
             executable='encoder',
+            name='left_encoder_node',
             parameters=[{
                 'gpio': 18,
                 'configuration': 'left',
@@ -19,6 +20,7 @@ def generate_launch_description()->LaunchDescription:
     right_encoder  = Node(
             package=package_name,
             executable='encoder',
+            name='right_encoder_node',
             parameters=[{
                 'gpio': 19,
                 'configuration': 'right',

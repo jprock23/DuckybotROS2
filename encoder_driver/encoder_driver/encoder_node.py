@@ -18,14 +18,14 @@ class Encoder_Node(Node):
         self.declare_parameter('gpio', 18)
         self.declare_parameter('resolution', 135)
         self.declare_parameter('type', 1)
-        
+
         self.configuration = self.get_parameter('configuration').get_parameter_value().string_value
         self.gpio = self.get_parameter('gpio').get_parameter_value().integer_value
         self.resolution = self.get_parameter('resolution').get_parameter_value().integer_value
         self.type = self.get_parameter('type').get_parameter_value().integer_value
         
         #Publishers
-        self.publisher = self.create_publisher(WheelEncoderStamped, f"~/{self.configuration}/tick", 10)
+        self.publisher = self.create_publisher(WheelEncoderStamped, f"~/tick", 10)
         self.timer = self.create_timer(0.5, self.tick_pub)
         
         #Subscribers
