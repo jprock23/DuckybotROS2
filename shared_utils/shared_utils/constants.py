@@ -1,3 +1,4 @@
+"""Contains various shared constants, enums and mappings used in various files."""
 from enum import IntEnum
 import dataclasses
 
@@ -5,6 +6,7 @@ LOW, GPIO_LOW, PWM_LOW = 0, 0, 0
 HIGH, GPIO_HIGH, PWM_HIGH = 1, 1, 4096
 
 class MotorDirection(IntEnum):
+    """Represent the direction a motor is spinning."""
     STOPPED = 0
     FORWARD = 1
     BACKWARD = -1
@@ -22,6 +24,7 @@ _PWM_VALUES = {
     
 @dataclasses.dataclass
 class MotorPins:
+    """Each motor requires three pins to be connected, excluding power pins, two for directional control and one for pwm."""
     in1: int
     in2: int
     pwm: int

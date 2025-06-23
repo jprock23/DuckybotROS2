@@ -1,12 +1,15 @@
+"""Module for the node representing an encoder"""
 import rclpy
 from rclpy.node import Node
-from .encoder import Encoder
 
 from std_msgs.msg import Header
 from shared_utils.constants import MotorDirection
 from interfaces.msg import WheelEncoderStamped, WheelsCmdStamped
 
+from .encoder import Encoder
+
 class Encoder_Node(Node):
+    """Node for an encoder"""
     def __init__(self):
         super().__init__('encoder_node')
         
@@ -22,17 +25,18 @@ class Encoder_Node(Node):
         self.type = self.get_parameter('type').get_parameter_value().integer_value
         
         #Publishers
-        self.publisher = self.create_publisher(WheelEncoderStamped, "~/{configuration}/tick".format(configuration=self.configuration), 10)
+        self.publisher = self.create_publisher(WheelEncoderStamped, f"~/{self.configuration}/tick", 10)
         self.timer = self.create_timer(0.5, self.tick_pub)
         
         #Subscribers
-        self.subscriber = self.create_subscription(WheelsCmdStamped, '/wheels_cmd', self.directiob_sub, 10)
+        self.subscriber = self.create_subscription(WheelsCmdStamped, '/wheels_cmd', self.direction_sub, 10)
         
         self.encoder = Encoder(self.gpio)
 
     def tick_pub(self):
+        """Publishes the tick count of the motor"""
         msg = WheelEncoderStamped()
-        msg.data = self.encoder.getTicks()
+        msg.data = self.encoder.get_ticks()
         msg.resolution = self.resolution
         msg.type = self.type
 
@@ -41,24 +45,26 @@ class Encoder_Node(Node):
         msg.header.frame_id = f'duckiebot/{self.configuration}_wheel_axis'
         self.publisher.publish(msg)
         
-        self.get_logger().info('Publishing: Time stamp: "%f", Frame_id: "%s", data::"%d", resolution:: "%d", type:: "%d"' % (msg.header.stamp.sec, msg.header.frame_id, msg.data,msg.resolution, msg.type))
+        self.get_logger().info(
+            f'Publishing: Time stamp: {msg.header.stamp.sec}, Frame_id: {msg.header.frame_id}, data:: {msg.data}, resolution:: {msg.resolution}, type:: {msg.type}')
     
-    def directiob_sub(self, msg):
-        self.get_logger().info('Heard: left:: "%s", right:: "%s"' % (msg.vel_left, msg.vel_right))
+    def direction_sub(self, msg):
+        """Subscribes to the /wheels_cmd topic to hear what direction the motor is moving"""
+        self.get_logger().info(f'Heard: left:: {msg.vel_left}, right:: {msg.vel_right}')
         if self.configuration == 'left':
             if msg.vel_left > 0:
-                self.encoder.setDirection(MotorDirection.FORWARD)
+                self.encoder.set_direction(MotorDirection.FORWARD)
             elif msg.vel_left < 0:
-                self.encoder.setDirection(MotorDirection.BACKWARD)
+                self.encoder.set_direction(MotorDirection.BACKWARD)
             else:
-                self.encoder.setDirection(MotorDirection.STOPPED)
+                self.encoder.set_direction(MotorDirection.STOPPED)
         if self.configuration == 'right':
             if msg.vel_right > 0:
-                self.encoder.setDirection(MotorDirection.FORWARD)
+                self.encoder.set_direction(MotorDirection.FORWARD)
             elif msg.vel_right < 0:
-                self.encoder.setDirection(MotorDirection.BACKWARD)
+                self.encoder.set_direction(MotorDirection.BACKWARD)
             else:
-                self.encoder.setDirection(MotorDirection.STOPPED)
+                self.encoder.set_direction(MotorDirection.STOPPED)
     
 def main(args=None):
     rclpy.init(args=args)
@@ -72,3 +78,4 @@ def main(args=None):
     
 if __name__ == "__main__":
     main()
+    

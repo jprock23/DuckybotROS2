@@ -1,7 +1,9 @@
+"""Common utility functions"""
 from math import sin, cos
 from geometry_msgs.msg import Quaternion
 
 def euler_to_quaternion(roll, pitch, yaw):
+    """Converts three euler angles (r.p.y) to a quaternion object."""
     qx = sin(roll/2) * cos(pitch/2) * cos(yaw/2) - cos(roll/2) * sin(pitch/2) * sin(yaw/2)
     qy = cos(roll/2) * sin(pitch/2) * cos(yaw/2) + sin(roll/2) * cos(pitch/2) * sin(yaw/2)
     qz = cos(roll/2) * cos(pitch/2) * sin(yaw/2) - sin(roll/2) * sin(pitch/2) * cos(yaw/2)

@@ -1,8 +1,10 @@
+"""Module for the hat on the raspberry pi"""
 from motor_driver.motor import Motor
 from shared_utils.Adafruit_PWM_Servo_Driver import PWM
 from shared_utils.constants import _MOTOR_NUM_TO_PINS
 
 class Hat():
+    """Class for interfacing the hat on the pi"""
     def __init__(self, address=0x60, frequency=1600):
         # default I2C address of the HAT
         self._i2caddr = address
@@ -14,6 +16,7 @@ class Hat():
         self._tick = 0
 
     def get_motor(self, num: int, name: str) -> Motor:
+        """Returns the motor correspodning to the given num in the dictionary defined in the constants file"""
         if num not in _MOTOR_NUM_TO_PINS:
             raise ValueError(
                 f"Motor num `{num}` not supported. "
@@ -21,3 +24,4 @@ class Hat():
             )
         pins = _MOTOR_NUM_TO_PINS[num]
         return Motor(name, self._pwm, pins.in1, pins.in2, pins.pwm)
+    
