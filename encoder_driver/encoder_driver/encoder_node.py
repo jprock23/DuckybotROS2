@@ -58,7 +58,7 @@ class Encoder_Node(Node):
                 self.encoder.set_direction(MotorDirection.BACKWARD)
             else:
                 self.encoder.set_direction(MotorDirection.STOPPED)
-        if self.configuration == 'right':
+        elif self.configuration == 'right':
             if msg.vel_right > 0:
                 self.encoder.set_direction(MotorDirection.FORWARD)
             elif msg.vel_right < 0:
