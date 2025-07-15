@@ -36,7 +36,7 @@ class Motor_Node(Node):
             
         self.left_motor.set(msg.vel_left)
         self.right_motor.set(msg.vel_right)
-        self.last_msg = msg.header.stamp
+        self.last_msg_time = msg.header.stamp
         
     
 def main(args=None):
