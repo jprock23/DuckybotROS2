@@ -26,7 +26,7 @@ class Encoder_Node(Node):
         
         #Publishers
         self.publisher = self.create_publisher(WheelEncoderStamped, f"~/tick", 10)
-        self.timer = self.create_timer(0.5, self.tick_pub)
+        self.timer = self.create_timer(1/30.0, self.tick_pub)
         
         #Subscribers
         self.subscriber = self.create_subscription(WheelsCmdStamped, '/wheels_cmd', self.direction_sub, 10)
