@@ -27,8 +27,11 @@ class Motor_Node(Node):
         self.prev_Lticks = 0
         self.prev_Rticks = 0
 
-        self.velL = 0.0
-        self.velR = 0.0
+        self.curr_velL = 0.0
+        self.curr_velR = 0.0
+
+        self.left_val = 0.0
+        self.right_val = 0.0
 
         self.setpointL = 0.0
         self.setpointR = 0.0
@@ -40,26 +43,27 @@ class Motor_Node(Node):
         self.last_msg_time = self.get_clock().now().to_msg()
 
     def update_left_ticks(self, msg):
-        self.velL = ((msg.data - self.prev_Lticks)/msg.resolution) * 2 * pi * self.wheel_radius
+        self.curr_velL = ((msg.data - self.prev_Lticks)/msg.resolution) * 2 * pi * self.wheel_radius
         self.prev_Lticks = msg.data
 
     def update_right_ticks(self, msg):
-        self.velR = ((msg.data - self.prev_Rticks)/msg.resolution) * 2 * pi * self.wheel_radius
+        self.curr_velR = ((msg.data - self.prev_Rticks)/msg.resolution) * 2 * pi * self.wheel_radius
         self.prev_Rticks = msg.data
 
     def calculate_control(self):
         curr_time = self.get_clock().now().to_msg()
         time_delta = (float(curr_time.sec) + (float(curr_time.nanosec/1e9))) - (float(self.last_msg_time.sec) + (float(self.last_msg_time.nanosec/1e9)))
         if(time_delta >= 1.0):
-            self.left_motor.set(0.0)
-            self.right_motor.set(0.0)
             self.setpointL = 0.0
             self.setpointR = 0.0
+            self.left_val = 0.0
+            self.right_val = 0.0
         else:
-            left_val += (self.setpointL - self.velL) * self.kP
-            right_val += (self.setpointR - self.velR) * self.kP
-            self.left_motor.set(left_val)
-            self.right_motor.set(right_val)
+            print(f'left err:: {self.setpointL - self.curr_velL}, right err:: {self.setpointR - self.curr_velR}')
+            self.left_val += (self.setpointL - self.curr_velL) * self.kP
+            self.right_val += (self.setpointR - self.curr_velR) * self.kP
+        self.left_motor.set(self.left_val)
+        self.right_motor.set(self.right_val)
         
     def set_setpoint(self, msg):
         """callback that subscirbes to the /wheels_cmd topic to get and apply motor controls"""
