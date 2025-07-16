@@ -70,12 +70,12 @@ class Motor_Node(Node):
     def calculate_control(self):
         curr_time = self.get_clock().now().to_msg()
         time_delta = (float(curr_time.sec) + (float(curr_time.nanosec/1e9))) - (float(self.last_msg_time.sec) + (float(self.last_msg_time.nanosec/1e9)))
-        # if(time_delta >= 1.0):
-        #     self.setpointL = 0.0
-        #     self.setpointR = 0.0
-        #     self.left_val = 0.0
-        #     self.right_val = 0.0
-        # else:
+        if(time_delta >= 1.0):
+            self.setpointL = 0.0
+            self.setpointR = 0.0
+            self.left_val = 0.0
+            self.right_val = 0.0
+        else:
         # if (self.left_errors.qsize() > self._max_queue_size):
         #     self.left_errors.get()
         #     self.right_errors.get()
@@ -90,9 +90,12 @@ class Motor_Node(Node):
         # self.right_vels.put(self.curr_velR)
         # self.left_setpoints.put(self.setpointL)
         # self.right_setpoints.put(self.setpointR)
-        
-        self.left_val += (self.setpointL - self.curr_velL) * self.kP
-        self.right_val += (self.setpointR - self.curr_velR) * self.kP
+
+            self.left_val += (self.setpointL - self.curr_velL) * self.kP
+            self.right_val += (self.setpointR - self.curr_velR) * self.kP
+
+            print(f'left_err::{self.setpointL - self.curr_velL}')
+            print(f'left_err::{self.setpointR - self.curr_velR}')
 
         # print('left_errors:: ')
         # print(self.left_errors.queue)
