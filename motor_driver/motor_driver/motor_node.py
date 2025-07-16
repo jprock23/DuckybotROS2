@@ -45,6 +45,7 @@ class Motor_Node(Node):
 
     def update_left_ticks(self, msg):
         self.curr_velL = (((msg.data - self.prev_Lticks)/float(msg.resolution)) * 2 * pi * self.wheel_radius)/self.time_period
+        print(f'distL:: {(((msg.data - self.prev_Lticks)/float(msg.resolution)) * 2 * pi * self.wheel_radius)}')
         self.prev_Lticks = msg.data
 
     def update_right_ticks(self, msg):
