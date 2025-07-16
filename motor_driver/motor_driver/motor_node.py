@@ -50,8 +50,9 @@ class Motor_Node(Node):
         self.right_setpoints = Queue()
         
         plt.ion()
-        self.fig, self.ax = plt.subplots()
-        self.line, _ = self.ax.plot([0.0], [0.0])
+        self.fig = plt.figure()
+        self.ax = self.fig.add_subplot(111)
+        self.line, = self.ax.plot([0.0], [0.0])
 
         self.time_period = 1/30.0
         self.control_timer = self.create_timer(self.time_period, self.calculate_control)
