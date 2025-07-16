@@ -135,9 +135,10 @@ def main(args=None):
     rclpy.init(args=args)
     
     motor_node = Motor_Node()
-    rclpy.spin(motor_node)
-
-    motor_node.destroy_node()
+    try:
+        rclpy.spin(motor_node)
+    except:
+        motor_node.destroy_node()
     rclpy.shutdown()
     
 if __name__ == "__main__":
