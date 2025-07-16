@@ -29,7 +29,7 @@ class Encoder_Node(Node):
         self.timer = self.create_timer(1/30.0, self.tick_pub)
         
         #Subscribers
-        self.subscriber = self.create_subscription(WheelsCmdStamped, '/wheels_cmd', self.direction_sub, 10)
+        self.subscriber = self.create_subscription(WheelsCmdStamped, '/wheels_cmd_executed', self.direction_sub, 10)
         
         self.encoder = Encoder(self.gpio)
 

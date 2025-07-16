@@ -5,6 +5,7 @@ from shared_utils.constants import MotorDirection
 from hat_driver.hat import Hat
 from math import pi
 
+from std_msgs.msg import Header
 from interfaces.msg import WheelsCmdStamped, WheelEncoderStamped
 
 from queue import Queue
@@ -20,6 +21,9 @@ class Motor_Node(Node):
         self.cmd_subscription = self.create_subscription(WheelsCmdStamped, '/wheels_cmd', self.set_setpoint, 10)
         self.encoderL_subscription = self.create_subscription(WheelEncoderStamped, '/left_encoder_node/tick', self.update_left_ticks, 10)
         self.encoderR_subscription = self.create_subscription(WheelEncoderStamped, '/right_encoder_node/tick', self.update_right_ticks, 10)
+
+        #Publishers
+        self.executed_cmd_publisher= self.create_publisher(WheelsCmdStamped, '/wheels_cmd_executed', 10)
 
         self.hat = Hat()
         self.left_motor = self.hat.get_motor(1, "left")
@@ -53,12 +57,19 @@ class Motor_Node(Node):
         self.prev_Rticks = msg.data
 
     def calculate_control(self):
+        msg = WheelsCmdStamped()
+        msg.header = Header()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = 'base_link'
+
         self.left_val += (self.setpointL - self.curr_velL) * self.kP
         self.right_val += (self.setpointR - self.curr_velR) * self.kP
 
         print(f'left_err::{self.setpointL - self.curr_velL}')
         print(f'right_err::{self.setpointR - self.curr_velR}')
 
+        msg.vel_left = self.left_val
+        msg.vel_right = self.right_val
         self.left_motor.set(self.left_val)
         self.right_motor.set(self.right_val)
         
