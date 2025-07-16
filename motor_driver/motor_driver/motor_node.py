@@ -41,13 +41,13 @@ class Motor_Node(Node):
 
         self.kP = 1.0
 
-        self._max_queue_size = 30
-        self.left_errors = Queue()
-        self.right_errors = Queue()
-        self.left_vels = Queue()
-        self.right_vels = Queue()
-        self.left_setpoints = Queue()
-        self.right_setpoints = Queue()
+        # self._max_queue_size = 30
+        # self.left_errors = Queue()
+        # self.right_errors = Queue()
+        # self.left_vels = Queue()
+        # self.right_vels = Queue()
+        # self.left_setpoints = Queue()
+        # self.right_setpoints = Queue()
         
         # plt.ion()
         # self.fig = plt.figure()
@@ -76,35 +76,35 @@ class Motor_Node(Node):
         #     self.left_val = 0.0
         #     self.right_val = 0.0
         # else:
-        if (self.left_errors.qsize() > self._max_queue_size):
-            self.left_errors.get()
-            self.right_errors.get()
-            self.left_vels.get()
-            self.right_vels.get()
-            self.left_setpoints.get()
-            self.right_setpoints.get()
+        # if (self.left_errors.qsize() > self._max_queue_size):
+        #     self.left_errors.get()
+        #     self.right_errors.get()
+        #     self.left_vels.get()
+        #     self.right_vels.get()
+        #     self.left_setpoints.get()
+        #     self.right_setpoints.get()
 
-        self.left_errors.put(self.setpointL - self.curr_velL)
-        self.right_errors.put(self.setpointR - self.curr_velR)
-        self.left_vels.put(self.curr_velL)
-        self.right_vels.put(self.curr_velR)
-        self.left_setpoints.put(self.setpointL)
-        self.right_setpoints.put(self.setpointR)
-        self.left_val += (self.setpointL - self.curr_velL) * self.kP
-        self.right_val += (self.setpointR - self.curr_velR) * self.kP
+        # self.left_errors.put(self.setpointL - self.curr_velL)
+        # self.right_errors.put(self.setpointR - self.curr_velR)
+        # self.left_vels.put(self.curr_velL)
+        # self.right_vels.put(self.curr_velR)
+        # self.left_setpoints.put(self.setpointL)
+        # self.right_setpoints.put(self.setpointR)
+        # self.left_val += (self.setpointL - self.curr_velL) * self.kP
+        # self.right_val += (self.setpointR - self.curr_velR) * self.kP
 
-        print('left_errors:: ')
-        print(self.left_errors.queue)
-        print('right_errors:: ')
-        print(self.right_errors.queue)
-        print('left_vels:: ')
-        print(self.left_vels.queue)
-        print('right-vels:: ')
-        print(self.right_vels.queue)
-        print('left_setpoints:: ')
-        print(self.left_setpoints.queue)
-        print('right_setpoints:: ')
-        print(self.right_setpoints.queue)
+        # print('left_errors:: ')
+        # print(self.left_errors.queue)
+        # print('right_errors:: ')
+        # print(self.right_errors.queue)
+        # print('left_vels:: ')
+        # print(self.left_vels.queue)
+        # print('right-vels:: ')
+        # print(self.right_vels.queue)
+        # print('left_setpoints:: ')
+        # print(self.left_setpoints.queue)
+        # print('right_setpoints:: ')
+        # print(self.right_setpoints.queue)
 
             # self.line.set_xdata(self.left_errors.qsize())
             # self.line.set_ydata(list(self.left_errors.queue))
