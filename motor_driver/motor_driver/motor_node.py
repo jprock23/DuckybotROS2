@@ -7,6 +7,9 @@ from math import pi
 
 from interfaces.msg import WheelsCmdStamped, WheelEncoderStamped
 
+from queue import Queue
+import matplotlib.pyplot as plt
+
 class Motor_Node(Node):
     """Class that defines the motor node"""
     def __init__(self):
@@ -15,8 +18,8 @@ class Motor_Node(Node):
         self.rdirc = MotorDirection.STOPPED
         #Subscriptions
         self.cmd_subscription = self.create_subscription(WheelsCmdStamped, '/wheels_cmd', self.set_setpoint, 10)
-        self.encoderL_subscription = self.create_subscription(WheelEncoderStamped, '/left_encoder_node/ticks', self.update_left_ticks, 10)
-        self.encoderR_subscription = self.create_subscription(WheelEncoderStamped, '/right_encoder_node/ticks', self.update_right_ticks, 10)
+        self.encoderL_subscription = self.create_subscription(WheelEncoderStamped, '/left_encoder_node/tick', self.update_left_ticks, 10)
+        self.encoderR_subscription = self.create_subscription(WheelEncoderStamped, '/right_encoder_node/tick', self.update_right_ticks, 10)
 
         self.hat = Hat()
         self.left_motor = self.hat.get_motor(1, "left")
@@ -37,6 +40,17 @@ class Motor_Node(Node):
         self.setpointR = 0.0
 
         self.kP = 1.0
+
+        self._max_queue_size = 30
+        self.left_errors = Queue()
+        self.right_errors = Queue()
+        self.left_vels = Queue()
+        self.right_vels = Queue()
+        self.left_setpoints = Queue()
+        self.right_setpoints = Queue()
+        
+        self.fig, self.ax = plt.subplots()
+        self.line, _ = self.ax.plot([], [], 'r-')
 
         self.time_period = 1/30.0
         self.control_timer = self.create_timer(self.time_period, self.calculate_control)
@@ -61,10 +75,28 @@ class Motor_Node(Node):
             self.left_val = 0.0
             self.right_val = 0.0
         else:
-            print(f'left err:: {self.setpointL - self.curr_velL}, right err:: {self.setpointR - self.curr_velR}')
-            print(f'left vel:: {self.curr_velL}, right vel:: {self.curr_velR}')
+            if (len(self.left_errors) > self._max_queue_size):
+                self.left_errors.get()
+                self.right_errors.get()
+                self.left_vels.get()
+                self.right_vels.get()
+                self.left_setpoints.get()
+                self.right_setpoints.get()
+
+            self.left_errors.put(self.setpointL - self.curr_velL)
+            self.right_errors.put(self.setpointR - self.curr_velR)
+            self.left_vels.put(self.curr_velL)
+            self.right_vels.put(self.curr_velR)
+            self.left_setpoints.put(self.setpointL)
+            self.right_setpoints.put(self.setpointR)
             self.left_val += (self.setpointL - self.curr_velL) * self.kP
             self.right_val += (self.setpointR - self.curr_velR) * self.kP
+
+            self.line.set_xdata(len(self.left_errors))
+            self.line.set_ydata(list(self.left_errors))
+            self.fig.canvas.draw()
+            self.fig.canvas.flush_events()
+
         self.left_motor.set(self.left_val)
         self.right_motor.set(self.right_val)
         
