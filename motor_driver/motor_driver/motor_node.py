@@ -49,10 +49,10 @@ class Motor_Node(Node):
         self.left_setpoints = Queue()
         self.right_setpoints = Queue()
         
-        plt.ion()
-        self.fig = plt.figure()
-        self.ax = self.fig.add_subplot(111)
-        self.line, = self.ax.plot([0.0], [0.0])
+        # plt.ion()
+        # self.fig = plt.figure()
+        # self.ax = self.fig.add_subplot(111)
+        # self.line, = self.ax.plot([0.0], [0.0])
 
         self.time_period = 1/30.0
         self.control_timer = self.create_timer(self.time_period, self.calculate_control)
@@ -94,10 +94,23 @@ class Motor_Node(Node):
             self.left_val += (self.setpointL - self.curr_velL) * self.kP
             self.right_val += (self.setpointR - self.curr_velR) * self.kP
 
-            self.line.set_xdata(self.left_errors.qsize())
-            self.line.set_ydata(list(self.left_errors.queue))
-            self.fig.canvas.draw()
-            self.fig.canvas.flush_events()
+            print('left_errors:: ')
+            print(self.left_errors.queue)
+            print('right_errors:: ')
+            print(self.right_errors.queue)
+            print('left_vels:: ')
+            print(self.left_vels.queue)
+            print('right-vels:: ')
+            print(self.right_vels.queue)
+            print('left_setpoints:: ')
+            print(self.left_setpoints.queue)
+            print('right_setpoints:: ')
+            print(self.right_setpoints.queue)
+
+            # self.line.set_xdata(self.left_errors.qsize())
+            # self.line.set_ydata(list(self.left_errors.queue))
+            # self.fig.canvas.draw()
+            # self.fig.canvas.flush_events()
 
         self.left_motor.set(self.left_val)
         self.right_motor.set(self.right_val)
