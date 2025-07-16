@@ -126,17 +126,18 @@ class Motor_Node(Node):
         self.setpointL = max(-0.25, min(msg.vel_left, 0.25))
         self.setpointR = max(-0.25, min(msg.vel_right, 0.25))
         
+    def destroy_node(self):
+        self.left_motor.set(0)
+        self.right_motor.set(0)
+        return super().destroy_node()
     
 def main(args=None):
     rclpy.init(args=args)
     
     motor_node = Motor_Node()
-    try:
-        rclpy.spin(motor_node)
-    except:
-        motor_node.left_motor.set(0)
-        motor_node.right_motor.set(0)
+    rclpy.spin(motor_node)
 
+    motor_node.destroy_node()
     rclpy.shutdown()
     
 if __name__ == "__main__":

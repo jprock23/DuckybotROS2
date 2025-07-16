@@ -71,9 +71,11 @@ def main(args=None):
     
     encoder_node = Encoder_Node()
     
-    rclpy.spin(encoder_node)
+    try:
+        rclpy.spin(encoder_node)
+    except:
+        encoder_node.destroy_node()
     
-    encoder_node.destroy_node()
     rclpy.shutdown()
     
 if __name__ == "__main__":
