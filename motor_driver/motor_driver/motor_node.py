@@ -95,7 +95,7 @@ class Motor_Node(Node):
             self.right_val += (self.setpointR - self.curr_velR) * self.kP
 
             print(f'left_err::{self.setpointL - self.curr_velL}')
-            print(f'left_err::{self.setpointR - self.curr_velR}')
+            print(f'right_err::{self.setpointR - self.curr_velR}')
 
         # print('left_errors:: ')
         # print(self.left_errors.queue)
@@ -131,9 +131,12 @@ def main(args=None):
     rclpy.init(args=args)
     
     motor_node = Motor_Node()
-    
-    rclpy.spin(motor_node)
-    
+    try:
+        rclpy.spin(motor_node)
+    except:
+        motor_node.left_motor.set(0)
+        motor_node.right_motor.set(0)
+
     rclpy.shutdown()
     
 if __name__ == "__main__":
