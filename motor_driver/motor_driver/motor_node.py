@@ -31,8 +31,8 @@ class Motor_Node(Node):
 
         self.wheel_radius = .0325
 
-        self.prev_Lticks = 0
-        self.prev_Rticks = 0
+        self.prev_Lticks = None
+        self.prev_Rticks = None
 
         self.curr_velL = 0.0
         self.curr_velR = 0.0
@@ -49,11 +49,13 @@ class Motor_Node(Node):
         self.control_timer = self.create_timer(self.time_period, self.calculate_control)
 
     def update_left_ticks(self, msg):
-        self.curr_velL = (((msg.data - self.prev_Lticks)/float(msg.resolution)) * 2 * pi * self.wheel_radius)/self.time_period
+        if (not self.prev_Lticks is None):
+            self.curr_velL = (((msg.data - self.prev_Lticks)/float(msg.resolution)) * 2 * pi * self.wheel_radius)/self.time_period
         self.prev_Lticks = msg.data
 
     def update_right_ticks(self, msg):
-        self.curr_velR = (((msg.data - self.prev_Rticks)/float(msg.resolution)) * 2 * pi * self.wheel_radius)/self.time_period
+        if (not self.prev_Rticks is None):
+            self.curr_velR = (((msg.data - self.prev_Rticks)/float(msg.resolution)) * 2 * pi * self.wheel_radius)/self.time_period
         self.prev_Rticks = msg.data
 
     def calculate_control(self):
@@ -71,7 +73,7 @@ class Motor_Node(Node):
         msg.vel_left = self.left_val
         msg.vel_right = self.right_val
         self.executed_cmd_publisher.publish(msg)
-        
+
         self.left_motor.set(self.left_val)
         self.right_motor.set(self.right_val)
         
