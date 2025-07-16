@@ -70,6 +70,8 @@ class Motor_Node(Node):
 
         msg.vel_left = self.left_val
         msg.vel_right = self.right_val
+        self.executed_cmd_publisher.publish(msg)
+        
         self.left_motor.set(self.left_val)
         self.right_motor.set(self.right_val)
         
