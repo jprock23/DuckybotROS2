@@ -95,7 +95,7 @@ class Motor_Node(Node):
             self.right_val += (self.setpointR - self.curr_velR) * self.kP
 
             self.line.set_xdata(self.left_errors.qsize())
-            self.line.set_ydata(list(self.left_errors))
+            self.line.set_ydata(list(self.left_errors.queue))
             self.fig.canvas.draw()
             self.fig.canvas.flush_events()
 
