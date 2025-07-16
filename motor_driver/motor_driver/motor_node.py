@@ -77,7 +77,7 @@ class Motor_Node(Node):
             self.left_val = 0.0
             self.right_val = 0.0
         else:
-            if (len(self.left_errors) > self._max_queue_size):
+            if (self.left_errors.qsize() > self._max_queue_size):
                 self.left_errors.get()
                 self.right_errors.get()
                 self.left_vels.get()
