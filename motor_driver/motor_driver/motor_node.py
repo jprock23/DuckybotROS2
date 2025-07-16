@@ -38,16 +38,17 @@ class Motor_Node(Node):
 
         self.kP = 1.0
 
-        self.control_timer = self.create_timer(1/30.0, self.calculate_control)
+        self.time_period = 1/30.0
+        self.control_timer = self.create_timer(self.time_period, self.calculate_control)
 
         self.last_msg_time = self.get_clock().now().to_msg()
 
     def update_left_ticks(self, msg):
-        self.curr_velL = ((msg.data - self.prev_Lticks)/msg.resolution) * 2 * pi * self.wheel_radius
+        self.curr_velL = (((msg.data - self.prev_Lticks)/msg.resolution) * 2 * pi * self.wheel_radius)/self.time_period
         self.prev_Lticks = msg.data
 
     def update_right_ticks(self, msg):
-        self.curr_velR = ((msg.data - self.prev_Rticks)/msg.resolution) * 2 * pi * self.wheel_radius
+        self.curr_velR = (((msg.data - self.prev_Rticks)/msg.resolution) * 2 * pi * self.wheel_radius)/self.time_period
         self.prev_Rticks = msg.data
 
     def calculate_control(self):
@@ -60,6 +61,7 @@ class Motor_Node(Node):
             self.right_val = 0.0
         else:
             print(f'left err:: {self.setpointL - self.curr_velL}, right err:: {self.setpointR - self.curr_velR}')
+            print(f'left vel:: {self.curr_velL}, right vel:: {self.curr_velR}')
             self.left_val += (self.setpointL - self.curr_velL) * self.kP
             self.right_val += (self.setpointR - self.curr_velR) * self.kP
         self.left_motor.set(self.left_val)
