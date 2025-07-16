@@ -90,8 +90,9 @@ class Motor_Node(Node):
         # self.right_vels.put(self.curr_velR)
         # self.left_setpoints.put(self.setpointL)
         # self.right_setpoints.put(self.setpointR)
-        # self.left_val += (self.setpointL - self.curr_velL) * self.kP
-        # self.right_val += (self.setpointR - self.curr_velR) * self.kP
+        
+        self.left_val += (self.setpointL - self.curr_velL) * self.kP
+        self.right_val += (self.setpointR - self.curr_velR) * self.kP
 
         # print('left_errors:: ')
         # print(self.left_errors.queue)
