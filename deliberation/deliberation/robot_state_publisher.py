@@ -4,7 +4,7 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile
 from geometry_msgs.msg import Quaternion
 from sensor_msgs.msg import JointState
-from tf2_ros import TransformBroadcaster, TransformStamped
+from tf2_ros import TransformBroadcaster, TransformStamped, StaticTransformBroadcaster
 
 class StatePublisher(Node):
 
@@ -12,66 +12,52 @@ class StatePublisher(Node):
         rclpy.init()
         super().__init__('state_publisher')
 
-        qos_profile = QoSProfile(depth=10)
-        self.joint_pub = self.create_publisher(JointState, 'joint_states', qos_profile)
-        self.broadcaster = TransformBroadcaster(self, qos=qos_profile)
+        # self.joint_pub = self.create_publisher(JointState, 'joint_states', qos_profile)
+        self.broadcaster = StaticTransformBroadcaster(self)
         self.nodeName = self.get_name()
         self.get_logger().info("{0} started".format(self.nodeName))
-
-        degree = pi / 180.0
-        loop_rate = self.create_rate(30)
-
-        # robot state
-        tilt = 0.
-        tinc = degree
-        swivel = 0.
-        angle = 0.
-        height = 0.
-        hinc = 0.005
-
+        
         # message declarations
-        odom_trans = TransformStamped()
-        odom_trans.header.frame_id = 'base_link'
-        odom_trans.child_frame_id = 'chassis'
-        joint_state = JointState()
+        chassis_transform = TransformStamped()
+        chassis_transform.header.frame_id = 'base_link'
+        chassis_transform.child_frame_id = 'chassis'
+        chassis_transform.transform.translation.x = 0.0
+        chassis_transform.transform.translation.y = 0.0
+        chassis_transform.transform.translation.z = 0.0325
 
-        try:
-            while rclpy.ok():
-                rclpy.spin_once(self)
+        chassis_transform.transform.rotation.x = 0.0
+        chassis_transform.transform.rotation.y = 0.0
+        chassis_transform.transform.rotation.z = 0.0
+        chassis_transform.transform.rotation.z = 1.0
 
-                # update joint_state
-                now = self.get_clock().now()
-                joint_state.header.stamp = now.to_msg()
-                joint_state.name = ['base2Chassis', 'left_wheel_axis', 'right_wheel_axis']
-                joint_state.position = [swivel, tilt, height]
 
-                #update transform
-                #(moving in a circle with radius=2)
-                odom_trans.header.stamp = now.to_msg()
-                odom_trans.transform.translation.x = cos(angle)*2
-                odom_trans.transform.translation.y = sin(angle)*2
-                odom_trans.transform.translation.z = 0.7
-                odom_trans.transform.rotation = \
-                    euler_to_quaternion(0, 0, angle + pi/2) # roll,pitch,yaw
+        left_wheel_axis_transform = TransformStamped()
+        left_wheel_axis_transform.header.frame_id = 'chassis'
+        left_wheel_axis_transform.child_frame_id = 'aarrgrpi/left_wheel_axis'
 
-                # send the joint state and transform
-                self.broadcaster.sendTransform(odom_trans)
+        right_wheel_axis_transform = TransformStamped()
+        right_wheel_axis_transform.header.frame_id = 'chassis'
+        right_wheel_axis_transform.child_frame_id = 'right_wheel_axis'
 
-                # Create new robot state
-                tilt += tinc
-                if tilt < -0.5 or tilt > 0.0:
-                    tinc *= -1
-                height += hinc
-                if height > 0.2 or height < 0.0:
-                    hinc *= -1
-                swivel += degree
-                angle += degree/4
+        camera_transform = TransformStamped()
+        camera_transform.header.frame_id = 'chassis'
+        camera_transform.child_frame_id = 'camera'
 
-                # This will adjust as needed per iteration
-                loop_rate.sleep()
+        computer_transform = TransformStamped()
+        computer_transform.header.frame_id = 'chassis'
+        computer_transform.child_frame_id = 'computer'
 
-        except KeyboardInterrupt:
-            pass
+        left_wheel_axis_transform.transform.translation.x = 0.0
+        left_wheel_axis_transform.transform.translation.y = 0.07
+        left_wheel_axis_transform.transform.translation.z = 0.0
+
+        left_wheel_axis_transform.transform.rotation.x = 0.0
+        left_wheel_axis_transform.transform.rotation.y = 0.0
+        left_wheel_axis_transform.transform.rotation.z = 0.0
+        left_wheel_axis_transform.transform.rotation.z = 1.0
+
+        self.broadcaster.sendTransform(left_wheel_axis_transform)
+        self.broadcaster.sendTransform(chassis_transform)
 
 def euler_to_quaternion(roll, pitch, yaw):
     qx = sin(roll/2) * cos(pitch/2) * cos(yaw/2) - cos(roll/2) * sin(pitch/2) * sin(yaw/2)
