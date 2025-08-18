@@ -67,15 +67,14 @@ class Motor_Node(Node):
         msg.header = Header()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = 'base_link'
-
-        # self.left_val += (self.setpointL - self.curr_velL) * self.kP
-        # self.right_val += (self.setpointR - self.curr_velR) * self.kP
-
         self.left_val = self.left_controller(self.curr_velL)
         self.right_val = self.right_controller(self.curr_velR)
 
         print(f'left_err::{self.setpointL - self.curr_velL}')
         print(f'right_err::{self.setpointR - self.curr_velR}')
+
+        print("left_val:: ", self.left_val)
+        print("right_val:: ", self.right_val)
 
         msg.vel_left = self.left_val
         msg.vel_right = self.right_val
@@ -89,10 +88,11 @@ class Motor_Node(Node):
         """callback that subscirbes to the /wheels_cmd topic to get and apply motor controls"""
         self.get_logger().info(f'Time stamp: {msg.header.stamp.sec}, Frame_id: {msg.header.frame_id}, vel_left: {msg.vel_left}, vel_right: {msg.vel_right}')
 
-        # self.setpointL = max(-0.25, min(msg.vel_left, 0.25))
-        # self.setpointR = max(-0.25, min(msg.vel_right, 0.25))
         self.left_controller.setpoint = max(-0.25, min(msg.vel_left, 0.25))
         self.right_controller.setpoint = max(-0.25, min(msg.vel_right, 0.25))
+
+        print("left_set::", self.left_controller.setpoint)
+        print("right_set::", self.left_controller.setpoint)
 
     def destroy_node(self):
         self.left_motor.set(0)
