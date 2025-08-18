@@ -4,6 +4,7 @@ from rclpy.node import Node
 from shared_utils.constants import MotorDirection
 from hat_driver.hat import Hat
 from math import pi
+from simple_pid import PID
 
 from std_msgs.msg import Header
 from interfaces.msg import WheelsCmdStamped, WheelEncoderStamped
@@ -25,6 +26,11 @@ class Motor_Node(Node):
         #Publishers
         self.executed_cmd_publisher= self.create_publisher(WheelsCmdStamped, '/wheels_cmd_executed', 10)
 
+        kP = 1.0
+
+        self.left_controller = PID(kP, 0.0, 0.0)
+        self.right_controller = PID(kP, 0.0, 0.0)
+
         self.hat = Hat()
         self.left_motor = self.hat.get_motor(1, "left")
         self.right_motor = self.hat.get_motor(2, "right")
@@ -42,8 +48,6 @@ class Motor_Node(Node):
 
         self.setpointL = 0.0
         self.setpointR = 0.0
-
-        self.kP = 1.0
 
         self.time_period = 1/30.0
         self.control_timer = self.create_timer(self.time_period, self.calculate_control)
@@ -64,8 +68,11 @@ class Motor_Node(Node):
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = 'base_link'
 
-        self.left_val += (self.setpointL - self.curr_velL) * self.kP
-        self.right_val += (self.setpointR - self.curr_velR) * self.kP
+        # self.left_val += (self.setpointL - self.curr_velL) * self.kP
+        # self.right_val += (self.setpointR - self.curr_velR) * self.kP
+
+        self.left_val = self.left_controller(self.curr_velL)
+        self.right_val = self.right_controller(self.curr_velR)
 
         print(f'left_err::{self.setpointL - self.curr_velL}')
         print(f'right_err::{self.setpointR - self.curr_velR}')
@@ -76,14 +83,17 @@ class Motor_Node(Node):
 
         self.left_motor.set(self.left_val)
         self.right_motor.set(self.right_val)
+
         
-    def set_setpoint(self, msg):
+    def set_setpoint(self, msg: WheelsCmdStamped):
         """callback that subscirbes to the /wheels_cmd topic to get and apply motor controls"""
         self.get_logger().info(f'Time stamp: {msg.header.stamp.sec}, Frame_id: {msg.header.frame_id}, vel_left: {msg.vel_left}, vel_right: {msg.vel_right}')
 
-        self.setpointL = max(-0.25, min(msg.vel_left, 0.25))
-        self.setpointR = max(-0.25, min(msg.vel_right, 0.25))
-        
+        # self.setpointL = max(-0.25, min(msg.vel_left, 0.25))
+        # self.setpointR = max(-0.25, min(msg.vel_right, 0.25))
+        self.left_controller.setpoint = max(-0.25, min(msg.vel_left, 0.25))
+        self.right_controller.setpoint = max(-0.25, min(msg.vel_right, 0.25))
+
     def destroy_node(self):
         self.left_motor.set(0)
         self.right_motor.set(0)
