@@ -47,7 +47,7 @@ class Motor_Node(Node):
         self.setpointL = 0.0
         self.setpointR = 0.0
 
-        self.time_period = 1/15.0
+        self.time_period = 1/30.0
         self.control_timer = self.create_timer(self.time_period, self.calculate_control)
 
     def update_left_vel(self, msg: TwistStamped):

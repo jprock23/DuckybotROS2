@@ -55,13 +55,17 @@ class Encoder_Node(Node):
         msg.header.frame_id = f'duckiebot/{self.configuration}_wheel_axis'
         self.tick_publisher.publish(msg)
         
-        self.get_logger().info(
-            f'Publishing: Time stamp: {msg.header.stamp.sec}, Frame_id: {msg.header.frame_id}, data:: {msg.data}, resolution:: {msg.resolution}, type:: {msg.type}')
+        # self.get_logger().info(
+        #     f'Publishing: Time stamp: {msg.header.stamp.sec}, Frame_id: {msg.header.frame_id}, data:: {msg.data}, resolution:: {msg.resolution}, type:: {msg.type}')
     
     def velocity_pub(self):
+        ticks = self.encoder.get_ticks()
         if (not self.prev_ticks is None):
-            self.curr_vel = (((self.encoder.get_ticks() - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/self.time_period
+            self.curr_vel = (((ticks - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/self.time_period
         self.prev_ticks = self.encoder.get_ticks()
+        print("prev_ticks:: ", self.prev_ticks)
+        print("ticks:: ", ticks)
+        print("diff:: ", ticks-self.prev_ticks)
 
         msg = TwistStamped()
         msg.header.stamp = self.get_clock().now().to_msg()
