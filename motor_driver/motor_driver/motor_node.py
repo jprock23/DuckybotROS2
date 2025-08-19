@@ -26,8 +26,7 @@ class Motor_Node(Node):
         self.executed_cmd_publisher= self.create_publisher(WheelsCmdStamped, '/wheels_cmd_executed', 10)
 
         kP = 4
-
-        self.left_controller = PID(kP, 0.0, 0.0)
+        self.left_controller = PID(2, 0.0, 0.0)
         self.right_controller = PID(kP, 0.0, 0.0)
 
         self.hat = Hat()
@@ -60,26 +59,28 @@ class Motor_Node(Node):
 
 
     def calculate_control(self):
-        msg = WheelsCmdStamped()
-        msg.header = Header()
-        msg.header.stamp = self.get_clock().now().to_msg()
-        msg.header.frame_id = 'base_link'
-        self.left_throttle = self.left_controller(self.curr_velL)
-        self.right_throttle = self.right_controller(self.curr_velR)
+        # msg = WheelsCmdStamped()
+        # msg.header = Header()
+        # msg.header.stamp = self.get_clock().now().to_msg()
+        # msg.header.frame_id = 'base_link'
+        # self.left_throttle = self.left_controller(self.curr_velL)
+        # self.right_throttle = self.right_controller(self.curr_velR)
 
-        print(f'left_err::{self.setpointL - self.curr_velL}')
-        print(f'right_err::{self.setpointR - self.curr_velR}')
+        # print(f'left_err::{self.setpointL - self.curr_velL}')
+        # print(f'right_err::{self.setpointR - self.curr_velR}')
 
-        print("left_val:: ", self.curr_velL)
-        print("right_val:: ", self.curr_velR)
+        # print("left_val:: ", self.curr_velL)
+        # print("right_val:: ", self.curr_velR)
 
-        #this is probably wrong
-        msg.vel_left = self.left_throttle
-        msg.vel_right = self.right_throttle
-        self.executed_cmd_publisher.publish(msg)
+        # #this is probably wrong
+        # msg.vel_left = self.left_throttle
+        # msg.vel_right = self.right_throttle
+        # self.executed_cmd_publisher.publish(msg)
 
-        self.left_motor.set(self.left_throttle)
-        self.right_motor.set(self.right_throttle)
+        # self.left_motor.set(self.left_throttle)
+        # self.right_motor.set(self.right_throttle)
+        self.left_motor.set(1)
+        self.right_motor.set(1)
 
         
     def set_setpoint(self, msg: WheelsCmdStamped):
@@ -90,7 +91,7 @@ class Motor_Node(Node):
         self.right_controller.setpoint = max(-0.25, min(msg.vel_right, 0.25))
 
         print("left_set::", self.left_controller.setpoint)
-        print("right_set::", self.left_controller.setpoint)
+        print("right_set::", self.right_controller.setpoint)
 
     def destroy_node(self):
         self.left_motor.set(0)
