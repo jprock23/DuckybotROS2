@@ -41,9 +41,6 @@ class Motor_Node(Node):
         self.left_throttle = 0.0
         self.right_throttle = 0.0
 
-        self.setpointL = 0.0
-        self.setpointR = 0.0
-
         self.time_period = 1/30.0
         self.control_timer = self.create_timer(self.time_period, self.calculate_control)
 
@@ -63,8 +60,8 @@ class Motor_Node(Node):
         self.left_throttle = self.left_controller(self.curr_velL)
         self.right_throttle = self.right_controller(self.curr_velR)
 
-        print(f'left_err::{self.setpointL - self.curr_velL}')
-        print(f'right_err::{self.setpointR - self.curr_velR}')
+        print(f'left_err::{self.left_controller.setpoint - self.curr_velL}')
+        print(f'right_err::{self.right_controller.setpoint - self.curr_velR}')
 
         print("left_val:: ", self.curr_velL)
         print("right_val:: ", self.curr_velR)
