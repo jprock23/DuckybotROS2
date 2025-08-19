@@ -20,13 +20,13 @@ class Motor_Node(Node):
         #Subscriptions
         self.cmd_subscription = self.create_subscription(WheelsCmdStamped, '/wheels_cmd', self.set_setpoint, 10)
         self.velocity_left_subscription = self.create_subscription(TwistStamped, '/left_encoder_node/velocity', self.update_left_vel, 10)
-        self.velocity_right_subscription = self.create_subscription(TwistStamped, '/right_encoder/velocity', self.update_right_vel, 10)
+        self.velocity_right_subscription = self.create_subscription(TwistStamped, '/right_encoder_node/velocity', self.update_right_vel, 10)
 
         #Publishers
         self.executed_cmd_publisher= self.create_publisher(WheelsCmdStamped, '/wheels_cmd_executed', 10)
 
         kP = 4
-        self.left_controller = PID(2, 0.0, 0.0)
+        self.left_controller = PID(kP, 0.0, 0.0)
         self.right_controller = PID(kP, 0.0, 0.0)
 
         self.hat = Hat()
@@ -59,28 +59,26 @@ class Motor_Node(Node):
 
 
     def calculate_control(self):
-        # msg = WheelsCmdStamped()
-        # msg.header = Header()
-        # msg.header.stamp = self.get_clock().now().to_msg()
-        # msg.header.frame_id = 'base_link'
-        # self.left_throttle = self.left_controller(self.curr_velL)
-        # self.right_throttle = self.right_controller(self.curr_velR)
+        msg = WheelsCmdStamped()
+        msg.header = Header()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = 'base_link'
+        self.left_throttle = self.left_controller(self.curr_velL)
+        self.right_throttle = self.right_controller(self.curr_velR)
 
-        # print(f'left_err::{self.setpointL - self.curr_velL}')
-        # print(f'right_err::{self.setpointR - self.curr_velR}')
+        print(f'left_err::{self.setpointL - self.curr_velL}')
+        print(f'right_err::{self.setpointR - self.curr_velR}')
 
-        # print("left_val:: ", self.curr_velL)
-        # print("right_val:: ", self.curr_velR)
+        print("left_val:: ", self.curr_velL)
+        print("right_val:: ", self.curr_velR)
 
-        # #this is probably wrong
-        # msg.vel_left = self.left_throttle
-        # msg.vel_right = self.right_throttle
-        # self.executed_cmd_publisher.publish(msg)
+        #this is probably wrong
+        msg.vel_left = self.left_throttle
+        msg.vel_right = self.right_throttle
+        self.executed_cmd_publisher.publish(msg)
 
-        # self.left_motor.set(self.left_throttle)
-        # self.right_motor.set(self.right_throttle)
-        self.left_motor.set(1)
-        self.right_motor.set(1)
+        self.left_motor.set(self.left_throttle)
+        self.right_motor.set(self.right_throttle)
 
         
     def set_setpoint(self, msg: WheelsCmdStamped):
