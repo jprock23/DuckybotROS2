@@ -9,15 +9,13 @@ from simple_pid import PID
 from std_msgs.msg import Header
 from interfaces.msg import WheelsCmdStamped, WheelEncoderStamped
 
-from queue import Queue
-import matplotlib.pyplot as plt
-
 class Motor_Node(Node):
     """Class that defines the motor node"""
     def __init__(self):
         super().__init__('motor_node')
         self.ldirc = MotorDirection.STOPPED
         self.rdirc = MotorDirection.STOPPED
+        
         #Subscriptions
         self.cmd_subscription = self.create_subscription(WheelsCmdStamped, '/wheels_cmd', self.set_setpoint, 10)
         self.encoderL_subscription = self.create_subscription(WheelEncoderStamped, '/left_encoder_node/tick', self.update_left_ticks, 10)
@@ -26,7 +24,7 @@ class Motor_Node(Node):
         #Publishers
         self.executed_cmd_publisher= self.create_publisher(WheelsCmdStamped, '/wheels_cmd_executed', 10)
 
-        kP = 1.0
+        kP = 4
 
         self.left_controller = PID(kP, 0.0, 0.0)
         self.right_controller = PID(kP, 0.0, 0.0)
