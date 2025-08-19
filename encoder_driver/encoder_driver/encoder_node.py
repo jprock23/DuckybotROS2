@@ -24,6 +24,7 @@ class Encoder_Node(Node):
         self.wheel_radius = .0325
         self.prev_ticks = None
         self.time_period = 1/30
+        self.curr_velL = 0.0
 
         self.configuration = self.get_parameter('configuration').get_parameter_value().string_value
         self.gpio = self.get_parameter('gpio').get_parameter_value().integer_value
@@ -65,8 +66,8 @@ class Encoder_Node(Node):
         msg = TwistStamped()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.twist.linear.x = self.curr_vel
-        msg.twist.linear.y = 0
-        msg.twist.linear.z = 0
+        msg.twist.linear.y = 0.0
+        msg.twist.linear.z = 0.0
 
         self.vel_publisher.publish(msg)
 
