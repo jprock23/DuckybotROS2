@@ -77,7 +77,7 @@ class Encoder_Node(Node):
 
     def direction_sub(self, msg):
         """Subscribes to the /wheels_cmd topic to hear what direction the motor is moving"""
-        self.get_logger().info(f'Heard: left:: {msg.vel_left}, right:: {msg.vel_right}')
+        # self.get_logger().info(f'Heard: left:: {msg.vel_left}, right:: {msg.vel_right}')
         if self.configuration == 'left':
             if msg.vel_left > 0:
                 self.encoder.set_direction(MotorDirection.FORWARD)

@@ -35,9 +35,6 @@ class Motor_Node(Node):
 
         self.wheel_radius = .0325
 
-        self.prev_Lticks = None
-        self.prev_Rticks = None
-
         self.curr_velL = 0.0
         self.curr_velR = 0.0
 
@@ -76,6 +73,9 @@ class Motor_Node(Node):
         msg.vel_left = self.left_throttle
         msg.vel_right = self.right_throttle
         self.executed_cmd_publisher.publish(msg)
+
+        print("left_comp:: ", self.left_controller.components)
+        print("right_comp:: ", self.right_controller.components)
 
         self.left_motor.set(self.left_throttle)
         self.right_motor.set(self.right_throttle)
