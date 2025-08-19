@@ -19,8 +19,6 @@ class Motor_Node(Node):
         
         #Subscriptions
         self.cmd_subscription = self.create_subscription(WheelsCmdStamped, '/wheels_cmd', self.set_setpoint, 10)
-        # self.encoderL_subscription = self.create_subscription(WheelEncoderStamped, '/left_encoder_node/tick', self.update_left_ticks, 10)
-        # self.encoderR_subscription = self.create_subscription(WheelEncoderStamped, '/right_encoder_node/tick', self.update_right_ticks, 10)
         self.velocity_left_subscription = self.create_subscription(TwistStamped, '/left_encoder_node/velocity', self.update_left_vel, 10)
         self.velocity_right_subscription = self.create_subscription(TwistStamped, '/right_encoder/velocity', self.update_right_vel, 10)
 
@@ -50,24 +48,16 @@ class Motor_Node(Node):
         self.setpointL = 0.0
         self.setpointR = 0.0
 
-        self.time_period = 1/30.0
+        self.time_period = 1/15.0
         self.control_timer = self.create_timer(self.time_period, self.calculate_control)
 
     def update_left_vel(self, msg: TwistStamped):
         self.curr_velL = msg.twist.linear.x
 
+
     def update_right_vel(self, msg: TwistStamped):
         self.curr_velR = msg.twist.linear.x
 
-    # def update_left_ticks(self, msg: WheelEncoderStamped):
-    #     if (not self.prev_Lticks is None):
-    #         self.curr_velL = (((msg.data - self.prev_Lticks)/float(msg.resolution)) * 2 * pi * self.wheel_radius)/self.time_period
-    #     self.prev_Lticks = msg.data
-
-    # def update_right_ticks(self, msg: WheelEncoderStamped):
-    #     if (not self.prev_Rticks is None):
-    #         self.curr_velR = (((msg.data - self.prev_Rticks)/float(msg.resolution)) * 2 * pi * self.wheel_radius)/self.time_period
-    #     self.prev_Rticks = msg.data
 
     def calculate_control(self):
         msg = WheelsCmdStamped()
