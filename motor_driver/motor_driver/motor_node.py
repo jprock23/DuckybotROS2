@@ -71,8 +71,8 @@ class Motor_Node(Node):
         print(f'left_err::{self.setpointL - self.curr_velL}')
         print(f'right_err::{self.setpointR - self.curr_velR}')
 
-        print("left_val:: ", self.left_val)
-        print("right_val:: ", self.right_val)
+        print("left_val:: ", self.curr_velL)
+        print("right_val:: ", self.curr_velR)
 
         msg.vel_left = self.left_val
         msg.vel_right = self.right_val
