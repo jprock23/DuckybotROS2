@@ -67,6 +67,7 @@ class Encoder_Node(Node):
         print("time1:: ", float(self.get_clock().now().seconds_nanoseconds()[0] + float(self.get_clock().now().seconds_nanoseconds()[1]/1.0e9)), "time2:: ", float(self.get_clock().now().seconds_nanoseconds()[0] + float(self.get_clock().now().seconds_nanoseconds()[1]/1.0e9)))
         print("prev_time:: ", self.prev_time)
 
+        print("vel:: ", self.curr_vel)
         msg = TwistStamped()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.twist.linear.x = self.curr_vel
