@@ -65,6 +65,7 @@ class Encoder_Node(Node):
         print("curr_time:: ", curr_time)
         if (not self.prev_ticks is None):
             self.curr_vel = (((self.encoder.get_ticks() - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/(curr_time - self.prev_time)
+            print("tick_delta", self.prev_ticks - self.encoder.get_ticks)
         self.prev_ticks = self.encoder.get_ticks()
         print("prev_time:: ", self.prev_time)
         print("time_delta:: ", curr_time - self.prev_time)

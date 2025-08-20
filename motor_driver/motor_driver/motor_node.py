@@ -25,7 +25,7 @@ class Motor_Node(Node):
         #Publishers
         self.executed_cmd_publisher= self.create_publisher(WheelsCmdStamped, '/wheels_cmd_executed', 10)
 
-        kP = 4
+        kP = 1
         self.left_controller = PID(kP, 0.0, 0.0)
         self.right_controller = PID(kP, 0.0, 0.0)
 
@@ -67,15 +67,15 @@ class Motor_Node(Node):
         print("right_val:: ", self.curr_velR)
 
         #this is probably wrong
-        # msg.vel_left = self.left_throttle
-        # msg.vel_right = self.right_throttle
-        msg.vel_left = 0.5
-        msg.vel_right = 0.5
+        msg.vel_left = self.left_throttle
+        msg.vel_right = self.right_throttle
+        # msg.vel_left = 0.5
+        # msg.vel_right = 0.5
         self.executed_cmd_publisher.publish(msg)
-        # self.left_motor.set(self.left_throttle)
-        # self.right_motor.set(self.right_throttle)
-        self.left_motor.set(0.5)
-        self.right_motor.set(0.5)
+        self.left_motor.set(self.left_throttle)
+        self.right_motor.set(self.right_throttle)
+        # self.left_motor.set(0.5)
+        # self.right_motor.set(0.5)
 
         
     def set_setpoint(self, msg: WheelsCmdStamped):
