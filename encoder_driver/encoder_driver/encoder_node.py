@@ -60,12 +60,15 @@ class Encoder_Node(Node):
         #     f'Publishing: Time stamp: {msg.header.stamp.sec}, Frame_id: {msg.header.frame_id}, data:: {msg.data}, resolution:: {msg.resolution}, type:: {msg.type}')
     
     def velocity_pub(self):
+        curr_time_tuple = self.get_clock().now().seconds_nanoseconds()
+        print("curr_time:: ", curr_time)
+        curr_time = float(curr_time_tuple[0] + float(curr_time_tuple[1]/1.0e9))
         if (not self.prev_ticks is None):
-            self.curr_vel = (((self.encoder.get_ticks() - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/(float(self.get_clock().now().seconds_nanoseconds()[0] + float(self.get_clock().now().seconds_nanoseconds()[1]/1.0e9)) - self.prev_time)
+            self.curr_vel = (((self.encoder.get_ticks() - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/(curr_time - self.prev_time)
         self.prev_ticks = self.encoder.get_ticks()
-        self.prev_time = float(self.get_clock().now().seconds_nanoseconds()[0] + float(self.get_clock().now().seconds_nanoseconds()[1]/1.0e9))
-        print("time1:: ", float(self.get_clock().now().seconds_nanoseconds()[0] + float(self.get_clock().now().seconds_nanoseconds()[1]/1.0e9)), "time2:: ", float(self.get_clock().now().seconds_nanoseconds()[0] + float(self.get_clock().now().seconds_nanoseconds()[1]/1.0e9)))
         print("prev_time:: ", self.prev_time)
+        print("time_delta:: ", curr_time - self.prev_time)
+        self.prev_time = curr_time
 
         print("vel:: ", self.curr_vel)
         msg = TwistStamped()
