@@ -61,8 +61,8 @@ class Encoder_Node(Node):
     
     def velocity_pub(self):
         curr_time_tuple = self.get_clock().now().seconds_nanoseconds()
-        print("curr_time:: ", curr_time)
         curr_time = float(curr_time_tuple[0] + float(curr_time_tuple[1]/1.0e9))
+        print("curr_time:: ", curr_time)
         if (not self.prev_ticks is None):
             self.curr_vel = (((self.encoder.get_ticks() - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/(curr_time - self.prev_time)
         self.prev_ticks = self.encoder.get_ticks()
@@ -79,7 +79,7 @@ class Encoder_Node(Node):
 
         self.vel_publisher.publish(msg)
 
-    def direction_sub(self, msg):
+    def direction_sub(self, msg: WheelsCmdStamped):
         """Subscribes to the /wheels_cmd topic to hear what direction the motor is moving"""
         # self.get_logger().info(f'Heard: left:: {msg.vel_left}, right:: {msg.vel_right}')
         if self.configuration == 'left':
