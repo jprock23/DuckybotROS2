@@ -23,6 +23,7 @@ class Encoder_Node(Node):
 
         self.wheel_radius = .0325
         self.prev_ticks = None
+        self.prev_time = None
         self.time_period = 1/30
         self.curr_vel = 0.0
 
@@ -59,13 +60,12 @@ class Encoder_Node(Node):
         #     f'Publishing: Time stamp: {msg.header.stamp.sec}, Frame_id: {msg.header.frame_id}, data:: {msg.data}, resolution:: {msg.resolution}, type:: {msg.type}')
     
     def velocity_pub(self):
-        ticks = self.encoder.get_ticks()
         if (not self.prev_ticks is None):
-            self.curr_vel = (((ticks - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/self.time_period
+            self.curr_vel = (((self.encoder.get_ticks() - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/(float(self.get_clock().now().seconds_nanoseconds()[0] + float(self.get_clock().now().seconds_nanoseconds()[1]/1.0e9)) - self.prev_time)
         self.prev_ticks = self.encoder.get_ticks()
-        print("prev_ticks:: ", self.prev_ticks)
-        print("ticks:: ", ticks)
-        print("diff:: ", ticks-self.prev_ticks)
+        self.prev_time = float(self.get_clock().now().seconds_nanoseconds()[0] + float(self.get_clock().now().seconds_nanoseconds()[1]/1.0e9))
+        print("time1:: ", float(self.get_clock().now().seconds_nanoseconds()[0] + float(self.get_clock().now().seconds_nanoseconds()[1]/1.0e9)), "time2:: ", float(self.get_clock().now().seconds_nanoseconds()[0] + float(self.get_clock().now().seconds_nanoseconds()[1]/1.0e9)))
+        print("prev_time:: ", self.prev_time)
 
         msg = TwistStamped()
         msg.header.stamp = self.get_clock().now().to_msg()
