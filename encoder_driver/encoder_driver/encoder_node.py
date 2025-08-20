@@ -24,7 +24,7 @@ class Encoder_Node(Node):
         self.wheel_radius = .0325
         self.prev_ticks = None
         self.prev_time = 0.0
-        self.time_period = 1/30
+        self.time_period = 1/5
         self.curr_vel = 0.0
 
         self.configuration = self.get_parameter('configuration').get_parameter_value().string_value
@@ -62,6 +62,7 @@ class Encoder_Node(Node):
     def velocity_pub(self):
         curr_time_tuple = self.get_clock().now().seconds_nanoseconds()
         curr_time = float(curr_time_tuple[0] + float(curr_time_tuple[1]/1.0e9))
+        print("--------------")
         print("curr_time:: ", curr_time)
         if (not self.prev_ticks is None):
             self.curr_vel = (((self.encoder.get_ticks() - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/(curr_time - self.prev_time)
