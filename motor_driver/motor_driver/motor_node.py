@@ -46,8 +46,8 @@ class Motor_Node(Node):
 
 
     def set_throttles(self, msg: Throttle):
-        self.left_motor = msg.left_throttle
-        self.right_motor = msg.right_throttle
+        self.left_motor.set(msg.left_throttle)
+        self.right_motor.set(msg.right_throttle)
         print(f'left_throttle:: {msg.left_throttle}, right_throttle:: {msg.right_throttle}')
 
     def update_left_vel(self, msg: TwistStamped):
