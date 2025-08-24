@@ -52,7 +52,6 @@ class Controller_Node(Node):
 
 
     def calculate_control(self):
-
         self.left_throttle = self.left_linear_controller(self.curr_velL)
         self.right_throttle = self.right_linear_controller(self.curr_velR)
 
@@ -81,7 +80,7 @@ class Controller_Node(Node):
 
         print("left_set::", self.left_linear_controller.setpoint)
         print("right_set::", self.right_linear_controller.setpoint)
-        
+
 def main():
     rclpy.init()
     

@@ -24,7 +24,7 @@ class Encoder_Node(Node):
         self.wheel_radius = .0325
         self.prev_ticks = None
         self.prev_time = 0.0
-        self.time_period = 1/10
+        self.time_period = 1/30
         self.curr_vel = 0.0
 
         self.configuration = self.get_parameter('configuration').get_parameter_value().string_value
