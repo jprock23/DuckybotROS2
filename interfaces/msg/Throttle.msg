@@ -1,2 +1,2 @@
-int64 left_throttle
-int64 right_throttle
+float32 left_throttle
+float32 right_throttle
