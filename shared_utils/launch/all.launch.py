@@ -7,7 +7,7 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description()->LaunchDescription:
     
     encoder_launch_dir = PathJoinSubstitution([FindPackageShare('encoder_driver'), 'launch'])
-    camera_launch_dir = PathJoinSubstitution([FindPackageShare('deliberation'), 'launch'])
+    camera_launch_dir = PathJoinSubstitution([FindPackageShare('robot_camera'), 'launch'])
     
     motors = Node(
         package='motor_driver',
