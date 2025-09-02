@@ -37,9 +37,10 @@ class Motor:
         self._controller = PWMMotorDirectionController(in1_pin, in2_pin, pwm=self._pwm)
         
         
-    def normalize_speed(self, speed: int):
+    def normalize_speed(self, speed: float):
         """Makes sure pwm values are within a valid range (0-255). Furthermore since duty cycles below 45 aren't enough to get the motors to drive,
         values below this point are set to 0"""
+        speed = max(0, min(1, speed))
         speed = floor(abs(speed * 255))
         
         if speed < 45:
@@ -49,7 +50,7 @@ class Motor:
         return speed
         
         
-    def set(self, speed: int = 0):
+    def set(self, speed: float = 0):
         """Takes in a value between -1 and 1(normalizes value outside this range) and applies them to the motor"""
         if speed < 0:
             self.direction = MotorDirection.BACKWARD

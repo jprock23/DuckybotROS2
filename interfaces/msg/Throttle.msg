@@ -1,2 +1,0 @@
-float32 left_throttle
-float32 right_throttle
