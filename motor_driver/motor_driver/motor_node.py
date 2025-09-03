@@ -41,49 +41,12 @@ class Motor_Node(Node):
         self.left_throttle = 0.0
         self.right_throttle = 0.0
 
-        # self.time_period = 1/30.0
-        # self.control_timer = self.create_timer(self.time_period, self.calculate_control)
-
 
     def set_throttles(self, msg: Throttle):
         self.left_motor.set(msg.left_throttle)
         self.right_motor.set(msg.right_throttle)
         print(f'left_throttle:: {msg.left_throttle}, right_throttle:: {msg.right_throttle}')
 
-    # def update_left_vel(self, msg: TwistStamped):
-    #     self.curr_velL = msg.twist.linear.x
-
-
-    # def update_right_vel(self, msg: TwistStamped):
-    #     self.curr_velR = msg.twist.linear.x
-
-
-    # def calculate_control(self):
-    #     msg = WheelsCmdStamped()
-    #     msg.header.stamp = self.get_clock().now().to_msg()
-    #     msg.header.frame_id = 'base_link'
-    #     self.left_throttle = self.left_controller(self.curr_velL)
-    #     self.right_throttle = self.right_controller(self.curr_velR)
-
-    #     print("left_val:: ", self.curr_velL)
-    #     print("right_val:: ", self.curr_velR)
-
-    #     msg.vel_left = self.left_throttle
-    #     msg.vel_right = self.right_throttle
-    #     self.executed_cmd_publisher.publish(msg)
-    #     self.left_motor.set(self.left_throttle)
-    #     self.right_motor.set(self.right_throttle)
-
-        
-    # def set_setpoint(self, msg: WheelsCmdStamped):
-    #     """callback that subscirbes to the /wheels_cmd topic to get and apply motor controls"""
-    #     self.get_logger().info(f'Time stamp: {msg.header.stamp.sec}, Frame_id: {msg.header.frame_id}, vel_left: {msg.vel_left}, vel_right: {msg.vel_right}')
-
-    #     self.left_controller.setpoint = max(-0.25, min(msg.vel_left, 0.25))
-    #     self.right_controller.setpoint = max(-0.25, min(msg.vel_right, 0.25))
-
-    #     print("left_set::", self.left_controller.setpoint)
-    #     print("right_set::", self.right_controller.setpoint)
 
     def destroy_node(self):
         self.left_motor.set(0)
