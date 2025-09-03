@@ -66,12 +66,15 @@ class Encoder_Node(Node):
         print("--------------")
         print("curr_time:: ", curr_time)
         if (not self.prev_ticks is None):
-            self.curr_vel = (((curr_ticks - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/(curr_time - self.prev_time)
-            print("tick_delta", (self.prev_ticks - curr_ticks))
+            raw_vel = (((curr_ticks - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/(curr_time - self.prev_time)
+            print("tick_delta", (curr_ticks - self.prev_ticks))
         self.prev_ticks = curr_ticks
         print("prev_time:: ", self.prev_time)
         print("time_delta:: ", curr_time - self.prev_time)
         self.prev_time = curr_time
+
+        alpha = 0.3
+        self.curr_vel = alpha * raw_vel + (1 - alpha) * self.curr_vel
 
         print("vel:: ", self.curr_vel)
         msg = TwistStamped()
