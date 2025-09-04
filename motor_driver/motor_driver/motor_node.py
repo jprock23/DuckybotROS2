@@ -4,7 +4,6 @@ from rclpy.node import Node
 from shared_utils.constants import MotorDirection
 from hat_driver.hat import Hat
 from math import pi
-from simple_pid import PID
 
 from interfaces.msg import WheelsCmdStamped, Throttle
 from geometry_msgs.msg import TwistStamped
@@ -24,10 +23,6 @@ class Motor_Node(Node):
 
         #Publishers
         self.executed_cmd_publisher= self.create_publisher(WheelsCmdStamped, '/wheels_cmd_executed', 10)
-
-        kP = 2
-        self.left_controller = PID(kP, 0.0, 0.0)
-        self.right_controller = PID(kP, 0.0, 0.0)
 
         self.hat = Hat()
         self.left_motor = self.hat.get_motor(1, "left")
