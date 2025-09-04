@@ -26,6 +26,7 @@ class Encoder_Node(Node):
         self.prev_time = 0.0
         self.time_period = 1/30
         self.curr_vel = 0.0
+        self.raw_vel = 0.0
 
         self.configuration = self.get_parameter('configuration').get_parameter_value().string_value
         self.gpio = self.get_parameter('gpio').get_parameter_value().integer_value
@@ -66,7 +67,7 @@ class Encoder_Node(Node):
         print("--------------")
         print("curr_time:: ", curr_time)
         if (not self.prev_ticks is None):
-            raw_vel = (((curr_ticks - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/(curr_time - self.prev_time)
+            self.raw_vel = (((curr_ticks - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/(curr_time - self.prev_time)
             print("tick_delta", (curr_ticks - self.prev_ticks))
         self.prev_ticks = curr_ticks
         print("prev_time:: ", self.prev_time)
