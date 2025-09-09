@@ -43,8 +43,8 @@ class Motor:
         # speed = max(0, min(1, speed))
         speed = floor(abs(speed * 255))
         
-        if speed < 45:
-            speed = 0
+        # if speed < 45:
+        #     speed = 0
         
         speed = max(0, min(255, speed))
         return speed
