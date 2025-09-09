@@ -18,7 +18,7 @@ class Encoder_Node(Node):
         #Parameters
         self.declare_parameter('configuration', 'left')
         self.declare_parameter('gpio', 18)
-        self.declare_parameter('resolution', 135)
+        self.declare_parameter('resolution', 137)
         self.declare_parameter('type', 1)
 
         self.wheel_radius = .0325
