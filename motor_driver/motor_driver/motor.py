@@ -40,11 +40,10 @@ class Motor:
     def normalize_speed(self, speed: float):
         """Makes sure pwm values are within a valid range (0-255). Furthermore since duty cycles below 45 aren't enough to get the motors to drive,
         values below this point are set to 0"""
-        # speed = max(0, min(1, speed))
         speed = floor(abs(speed * 255))
         
-        # if speed < 45:
-        #     speed = 0
+        if speed < 45:
+            speed = 0
         
         speed = max(0, min(255, speed))
         return speed

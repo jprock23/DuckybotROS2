@@ -85,10 +85,10 @@ class Controller_Node(Node):
         
 
     def calculate_linear_control(self):
-        #self.left_throttle = self.left_linear_controller(self.curr_velL)
-        #self.right_throttle = self.right_linear_controller(self.curr_velR)
-        self.left_throttle = 1.0
-        self.right_throttle = 1.0
+        self.left_throttle = self.left_linear_controller(self.curr_velL)
+        self.right_throttle = self.right_linear_controller(self.curr_velR)
+        # self.left_throttle = 1.0
+        # self.right_throttle = 1.0
 
         print("left_val:: ", self.curr_velL)
         print("right_val:: ", self.curr_velR)
