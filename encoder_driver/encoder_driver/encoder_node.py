@@ -24,7 +24,7 @@ class Encoder_Node(Node):
         self.wheel_radius = .0325
         self.prev_ticks = None
         self.prev_time = 0.0
-        self.time_period = 1/10
+        self.time_period = 1/20
         self.curr_vel = 0.0
         self.raw_vel = 0.0
 
@@ -57,9 +57,7 @@ class Encoder_Node(Node):
         msg.header.frame_id = f'duckiebot/{self.configuration}_wheel_axis'
         self.tick_publisher.publish(msg)
         
-        # self.get_logger().info(
-        #     f'Publishing: Time stamp: {msg.header.stamp.sec}, Frame_id: {msg.header.frame_id}, data:: {msg.data}, resolution:: {msg.resolution}, type:: {msg.type}')
-    
+            
     def velocity_pub(self):
         curr_time_tuple = self.get_clock().now().seconds_nanoseconds()
         curr_time = float(curr_time_tuple[0] + float(curr_time_tuple[1]/1.0e9))
@@ -67,16 +65,15 @@ class Encoder_Node(Node):
         print("--------------")
         print("curr_time:: ", curr_time)
         if (not self.prev_ticks is None):
-            #self.raw_vel = (((curr_ticks - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/(curr_time - self.prev_time)
-            self.curr_vel = (((curr_ticks - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/(curr_time - self.prev_time)
+            self.raw_vel = (((curr_ticks - self.prev_ticks)/float(self.resolution)) * 2 * pi * self.wheel_radius)/(curr_time - self.prev_time)
             print("tick_delta", (curr_ticks - self.prev_ticks))
         self.prev_ticks = curr_ticks
         print("prev_time:: ", self.prev_time)
         print("time_delta:: ", curr_time - self.prev_time)
         self.prev_time = curr_time
 
-        #alpha = 0.35
-        #self.curr_vel = alpha * self.raw_vel + (1 - alpha) * self.curr_vel
+        alpha = 0.35
+        self.curr_vel = alpha * self.raw_vel + (1 - alpha) * self.curr_vel
 
         print("vel:: ", self.curr_vel)
         msg = TwistStamped()
