@@ -24,7 +24,7 @@ class Encoder_Node(Node):
         self.wheel_radius = .0325
         self.prev_ticks = None
         self.prev_time = 0.0
-        self.time_period = 1/10
+        self.time_period = 1/10.0
         self.curr_vel = 0.0
         self.raw_vel = 0.0
 
@@ -72,8 +72,9 @@ class Encoder_Node(Node):
         print("time_delta:: ", curr_time - self.prev_time)
         self.prev_time = curr_time
 
-        alpha = 0.55
+        alpha = 0.20
         self.curr_vel = alpha * self.raw_vel + (1 - alpha) * self.curr_vel
+        #self.curr_vel = self.raw_vel
 
         print("vel:: ", self.curr_vel)
         msg = TwistStamped()
@@ -116,6 +117,4 @@ def main(args=None):
     
 if __name__ == "__main__":
     main()
-
-    
     
